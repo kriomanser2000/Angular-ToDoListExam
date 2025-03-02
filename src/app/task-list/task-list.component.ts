@@ -1,15 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { TaskService } from '../task.service';
 import { Task } from '../task.model';
 
 @Component({
   selector: 'app-task-list',
-  standalone: true,
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css'],
-  imports: [CommonModule, FormsModule]
+  styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent 
 {
@@ -31,19 +27,24 @@ export class TaskListComponent
     }
     return this.tasks;
   }
-  toggleTask(id: number): void 
+  toggleTask(id: number): void
   {
     this.taskService.toggleTask(id);
+    this.tasks = this.taskService.getTasks();
   }
   deleteTask(id: number): void 
   {
     this.taskService.deleteTask(id);
     this.tasks = this.taskService.getTasks();
   }
+  startEdit(task: Task): void 
+  {
+    task.editing = true;
+  }
   saveEdit(task: Task): void 
   {
     task.editing = false;
-    this.taskService.editTask(task.id, task.title);
+    this.taskService.editTask(task.id, task.title, task.description, task.dueDate, task.tags, task.priority);
   }
   setFilter(filter: string): void 
   {
