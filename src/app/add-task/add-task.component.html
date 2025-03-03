@@ -1,11 +1,9 @@
-<div class="task-form">
-  <input [(ngModel)]="newTaskTitle" placeholder="Назва завдання" />
-  <input [(ngModel)]="newTaskDescription" placeholder="Опис" />
-  <input [(ngModel)]="newTaskDueDate" type="date" />
-  <select [(ngModel)]="newTaskPriority">
-    <option value="low">Низький</option>
-    <option value="medium">Середній</option>
-    <option value="high">Високий</option>
-  </select>
-  <button (click)="addTask()">Додати завдання</button>
-</div>
+<input [(ngModel)]="newTaskTitle" placeholder="Title">
+<input [(ngModel)]="newTaskDescription" placeholder="Description">
+<select [(ngModel)]="newTaskPriority">
+  <option value="low">Low</option>
+  <option value="medium">Medium</option>
+  <option value="high">High</option>
+</select>
+<input type="date" [(ngModel)]="newTaskDueDate">
+<button (click)="addTask()">Add Task</button>

@@ -1,9 +1,10 @@
+export type Priority = "low" | "medium" | "high";
 export interface Task 
 {
   id: number;
   title: string;
   description: string;
-  dueDate: string;
-  priority: 'low' | 'medium' | 'high';
   completed: boolean;
+  priority: Priority;
+  dueDate: string;
 }

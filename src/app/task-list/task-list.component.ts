@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TaskService } from '../task.service';
 import { Task } from '../task.model';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  styleUrls: ['./task-list.component.css'],
+  imports: []
 })
-export class TaskListComponent
+export class TaskListComponent 
 {
   tasks: Task[] = [];
   filter: string = 'all';
@@ -20,23 +19,24 @@ export class TaskListComponent
   }
   get filteredTasks(): Task[] 
   {
-    return this.filter === 'completed'
-      ? this.tasks.filter(task => task.completed)
-      : this.filter === 'pending'
-      ? this.tasks.filter(task => !task.completed)
-      : this.tasks;
+    if (this.filter === 'completed') 
+    {
+      return this.tasks.filter(task => task.completed);
+    } 
+    else if (this.filter === 'pending') 
+    {
+      return this.tasks.filter(task => !task.completed);
+    }
+    return this.tasks;
   }
   toggleTask(id: number): void 
   {
     this.taskService.toggleTask(id);
+    this.tasks = this.taskService.getTasks();
   }
   deleteTask(id: number): void 
   {
     this.taskService.deleteTask(id);
     this.tasks = this.taskService.getTasks();
-  }
-  setFilter(filter: string): void 
-  {
-    this.filter = filter;
   }
 }
