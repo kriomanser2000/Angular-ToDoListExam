@@ -1,14 +1,17 @@
-<div class="filters">
+<div class="task-filter">
   <button (click)="setFilter('all')">Всі</button>
   <button (click)="setFilter('completed')">Виконані</button>
   <button (click)="setFilter('pending')">Невиконані</button>
 </div>
-<ul>
-  <li *ngFor="let task of filteredTasks">
-    <input type="checkbox" [checked]="task.completed" (change)="toggleTask(task.id)" />
-    <span *ngIf="!task.editing" [class.completed]="task.completed">{{ task.title }} - {{ task.priority }}</span>
-    <input *ngIf="task.editing" [(ngModel)]="task.title" (blur)="saveEdit(task)" />
-    <button (click)="startEdit(task)">Редагувати</button>
+<ul class="task-list">
+  <li *ngFor="let task of filteredTasks" [class.completed]="task.completed">
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.description }}</p>
+    <p><strong>Дата:</strong> {{ task.dueDate }}</p>
+    <p><strong>Пріоритет:</strong> {{ task.priority }}</p>
+    <button (click)="toggleTask(task.id)">
+      {{ task.completed ? 'Позначити як невиконане' : 'Позначити як виконане' }}
+    </button>
     <button (click)="deleteTask(task.id)">Видалити</button>
   </li>
 </ul>

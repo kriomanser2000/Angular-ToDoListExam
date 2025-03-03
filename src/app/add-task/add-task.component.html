@@ -1,12 +1,11 @@
-<div class="add-task">
-  <input [(ngModel)]="title" placeholder="Назва справи" />
-  <input [(ngModel)]="description" placeholder="Опис справи" />
-  <input [(ngModel)]="dueDate" type="datetime-local" />
-  <input [(ngModel)]="tags" placeholder="Теги (через кому)" />
-  <select [(ngModel)]="priority">
+<div class="task-form">
+  <input [(ngModel)]="newTaskTitle" placeholder="Назва завдання" />
+  <input [(ngModel)]="newTaskDescription" placeholder="Опис" />
+  <input [(ngModel)]="newTaskDueDate" type="date" />
+  <select [(ngModel)]="newTaskPriority">
     <option value="low">Низький</option>
     <option value="medium">Середній</option>
     <option value="high">Високий</option>
   </select>
-  <button (click)="addTask()">Додати справу</button>
+  <button (click)="addTask()">Додати завдання</button>
 </div>
