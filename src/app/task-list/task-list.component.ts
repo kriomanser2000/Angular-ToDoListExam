@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Task } from '../task.model';
 import { NgFor, NgIf } from '@angular/common';
@@ -10,17 +10,25 @@ import { NgFor, NgIf } from '@angular/common';
   styleUrls: ['./task-list.component.css'],
   imports: [NgFor, NgIf]
 })
-export class TaskListComponent 
+export class TaskListComponent implements OnInit
 {
+  ngOnInit(): void 
+  {
+    this.loadTasks();
+  }
   tasks: Task[] = [];
   filter: string = 'all';
   constructor(private taskService: TaskService) 
   {
-    this.tasks = this.taskService.getTasks();
+    this.loadTasks();
+  }
+  loadTasks(): void 
+  {
+    this.tasks = this.taskService.getTasks().map(task => ({ ...task, showDescription: false }));
   }
   get filteredTasks(): Task[] 
   {
-    if (this.filter === 'completed') 
+    if (this.filter === 'completed')
     {
       return this.tasks.filter(task => task.completed);
     } 
@@ -33,11 +41,17 @@ export class TaskListComponent
   toggleTask(id: number): void 
   {
     this.taskService.toggleTask(id);
-    this.tasks = this.taskService.getTasks();
+    this.loadTasks();
   }
   deleteTask(id: number): void 
   {
     this.taskService.deleteTask(id);
-    this.tasks = this.taskService.getTasks();
+    this.loadTasks();
+  }
+  toggleDescription(id: number): void 
+  {
+    this.tasks = this.tasks.map(task =>
+      task.id === id ? { ...task, showDescription: !task.showDescription } : task
+    );
   }
 }

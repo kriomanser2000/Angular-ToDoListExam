@@ -6,12 +6,15 @@ import { Task, Priority } from './task.model';
 })
 export class TaskService 
 {
-  private storageKey = 'tasks';
+  private tasks: Task[] = [];
   constructor() 
   {
-    this.loadTasks();
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) 
+    {
+      this.tasks = JSON.parse(savedTasks);
+    }
   }
-  private tasks: Task[] = [];
   getTasks(): Task[] 
   {
     return this.tasks;
@@ -23,16 +26,16 @@ export class TaskService
       id: Date.now(),
       title,
       description,
-      completed: false,
       priority,
-      dueDate
+      dueDate,
+      completed: false
     };
     this.tasks.push(newTask);
     this.saveTasks();
   }
   toggleTask(id: number): void 
   {
-    const task = this.tasks.find(t => t.id === id);
+    const task = this.tasks.find(task => task.id === id);
     if (task) 
     {
       task.completed = !task.completed;
@@ -41,39 +44,11 @@ export class TaskService
   }
   deleteTask(id: number): void 
   {
-    this.tasks = this.tasks.filter(t => t.id !== id);
+    this.tasks = this.tasks.filter(task => task.id !== id);
     this.saveTasks();
-  }
-  editTask(id: number, title: string, description: string, priority: Priority, dueDate: string): void 
-  {
-    const task = this.tasks.find(t => t.id === id);
-    if (task) 
-    {
-      task.title = title;
-      task.description = description;
-      task.priority = priority;
-      task.dueDate = dueDate;
-      this.saveTasks();
-    }
   }
   private saveTasks(): void 
   {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.tasks));
-  }
-  private loadTasks(): void 
-  {
-    const storedTasks = localStorage.getItem(this.storageKey);
-    if (storedTasks) 
-    {
-      this.tasks = JSON.parse(storedTasks).map((task: any) => ({
-        ...task,
-        priority: this.validatePriority(task.priority)
-      }));
-    }
-  }
-  private validatePriority(priority: string): Priority 
-  {
-    const allowedPriorities: Priority[] = ["low", "medium", "high"];
-    return allowedPriorities.includes(priority as Priority) ? (priority as Priority) : "low";
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 }

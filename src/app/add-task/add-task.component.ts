@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TaskService } from '../task.service';
-import { Priority } from '../task.model';
+import { Task, Priority } from '../task.model';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
 
@@ -9,7 +9,7 @@ import { NgIf, NgFor } from '@angular/common';
   standalone: true,
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.css'],
-  imports: [FormsModule, NgIf, NgFor]
+  imports: [FormsModule]
 })
 export class AddTaskComponent 
 {
@@ -21,8 +21,12 @@ export class AddTaskComponent
   addTask(): void 
   {
     if (!this.newTaskTitle.trim()) return;
-    this.taskService.addTask(this.newTaskTitle, this.newTaskDescription, this.newTaskPriority, this.newTaskDueDate);
-    this.taskService.getTasks();
+    this.taskService.addTask(
+      this.newTaskTitle,
+      this.newTaskDescription,
+      this.newTaskPriority,
+      this.newTaskDueDate
+    );
     this.newTaskTitle = '';
     this.newTaskDescription = '';
     this.newTaskPriority = 'medium';

@@ -1,9 +1,16 @@
-<ul>
-  <li *ngFor="let task of filteredTasks">
-    <span [class.completed]="task.completed">
-      {{ task.title }} - {{ task.priority }} - {{ task.dueDate }}
-    </span>
-    <button (click)="toggleTask(task.id)">✔</button>
-    <button (click)="deleteTask(task.id)">🗑</button>
+<ul class="task-list">
+  <li *ngFor="let task of filteredTasks" (click)="toggleDescription(task.id)">
+    <div class="task-header">
+      <span [class.completed]="task.completed">
+        <strong>{{ task.title }}</strong>
+        <span class="priority {{ task.priority }}">{{ task.priority }}</span>
+        <span class="due-date">{{ task.dueDate }}</span>
+      </span>
+      <button (click)="toggleTask(task.id); $event.stopPropagation()">✔</button>
+      <button (click)="deleteTask(task.id); $event.stopPropagation()">🗑</button>
+    </div>
+    <p *ngIf="task.showDescription" class="task-description">
+      {{ task.description || "Опис відсутній" }}
+    </p>
   </li>
 </ul>
