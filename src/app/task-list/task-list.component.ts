@@ -37,7 +37,8 @@ export class TaskListComponent implements OnInit
     {
       sortedTasks = sortedTasks.filter(task => !task.completed);
     }
-    return sortedTasks.sort((a, b) => {
+    return sortedTasks.sort((a, b) => 
+    {
       const priorityOrder: Record<Priority, number> = { high: 3, medium: 2, low: 1 };
       return priorityOrder[b.priority] - priorityOrder[a.priority];
     });
