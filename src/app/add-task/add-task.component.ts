@@ -22,6 +22,7 @@ export class AddTaskComponent
   {
     if (!this.newTaskTitle.trim()) return;
     this.taskService.addTask(this.newTaskTitle, this.newTaskDescription, this.newTaskPriority, this.newTaskDueDate);
+    this.taskService.getTasks();
     this.newTaskTitle = '';
     this.newTaskDescription = '';
     this.newTaskPriority = 'medium';

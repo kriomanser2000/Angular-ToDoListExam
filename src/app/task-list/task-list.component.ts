@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Task } from '../task.model';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  imports: []
+  imports: [NgFor, NgIf]
 })
 export class TaskListComponent 
 {
