@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../task.service';
-import { Task } from '../task.model';
+import { Priority, Task } from '../task.model';
 import { NgFor, NgIf } from '@angular/common';
 
 @Component({
@@ -28,15 +28,19 @@ export class TaskListComponent implements OnInit
   }
   get filteredTasks(): Task[] 
   {
-    if (this.filter === 'completed')
+    let sortedTasks = [...this.tasks];
+    if (this.filter === 'completed') 
     {
-      return this.tasks.filter(task => task.completed);
+      sortedTasks = sortedTasks.filter(task => task.completed);
     } 
     else if (this.filter === 'pending') 
     {
-      return this.tasks.filter(task => !task.completed);
+      sortedTasks = sortedTasks.filter(task => !task.completed);
     }
-    return this.tasks;
+    return sortedTasks.sort((a, b) => {
+      const priorityOrder: Record<Priority, number> = { high: 3, medium: 2, low: 1 };
+      return priorityOrder[b.priority] - priorityOrder[a.priority];
+    });
   }
   toggleTask(id: number): void 
   {
