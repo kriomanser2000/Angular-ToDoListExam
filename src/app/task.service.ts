@@ -33,6 +33,13 @@ export class TaskService
     this.tasks.push(newTask);
     this.saveTasks();
   }
+  updateTask(id: number, title: string, description: string): void 
+  {
+    this.tasks = this.tasks.map(task =>
+      task.id === id ? { ...task, title, description } : task
+    );
+    this.saveTasks();
+  }
   toggleTask(id: number): void 
   {
     const task = this.tasks.find(task => task.id === id);

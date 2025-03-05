@@ -1,34 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TaskService } from '../task.service';
-import { Priority, Task } from '../task.model';
+import { Task } from '../task.model';
 import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  imports: [NgFor, NgIf]
+  imports: [NgFor, NgIf, FormsModule]
 })
-export class TaskListComponent implements OnInit
+export class TaskListComponent 
 {
-  ngOnInit(): void 
-  {
-    this.loadTasks();
-  }
   tasks: Task[] = [];
   filter: string = 'all';
+  editTaskId: number | null = null;
+  editTitle: string = '';
+  editDescription: string = '';
   constructor(private taskService: TaskService) 
   {
     this.loadTasks();
   }
   loadTasks(): void 
   {
-    this.tasks = this.taskService.getTasks().map(task => ({ ...task, showDescription: false }));
+    this.tasks = this.taskService.getTasks().map(task => ({
+      ...task,
+      showDescription: task.showDescription ?? false
+    }));
   }
   get filteredTasks(): Task[] 
   {
-    let sortedTasks = [...this.tasks];
+    let sortedTasks = this.tasks.map(task => ({ ...task }));
     if (this.filter === 'completed') 
     {
       sortedTasks = sortedTasks.filter(task => task.completed);
@@ -37,11 +40,8 @@ export class TaskListComponent implements OnInit
     {
       sortedTasks = sortedTasks.filter(task => !task.completed);
     }
-    return sortedTasks.sort((a, b) => 
-    {
-      const priorityOrder: Record<Priority, number> = { high: 3, medium: 2, low: 1 };
-      return priorityOrder[b.priority] - priorityOrder[a.priority];
-    });
+    const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
+    return sortedTasks.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
   }
   toggleTask(id: number): void 
   {
@@ -58,5 +58,24 @@ export class TaskListComponent implements OnInit
     this.tasks = this.tasks.map(task =>
       task.id === id ? { ...task, showDescription: !task.showDescription } : task
     );
+  }
+  startEditing(task: Task): void 
+  {
+    console.log('Editing started:', task);
+    this.editTaskId = task.id;
+    this.editTitle = task.title;
+    this.editDescription = task.description;
+  }
+  saveTask(id: number): void 
+  {
+    if (!this.editTitle.trim()) return;
+    console.log('Saving:', id);
+    this.taskService.updateTask(id, this.editTitle, this.editDescription);
+    this.tasks = this.tasks.map(task =>
+      task.id === id
+        ? { ...task, title: this.editTitle, description: this.editDescription }
+        : task
+    );
+    this.editTaskId = null;
   }
 }

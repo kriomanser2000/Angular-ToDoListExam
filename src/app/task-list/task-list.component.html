@@ -1,16 +1,20 @@
 <ul class="task-list">
-  <li *ngFor="let task of filteredTasks" (click)="toggleDescription(task.id)">
-    <div class="task-header">
+  <li *ngFor="let task of filteredTasks">
+    <div class="task-header" (click)="toggleDescription(task.id)">
       <span [class.completed]="task.completed">
-        <strong>{{ task.title }}</strong>
+        <strong *ngIf="editTaskId !== task.id">{{ task.title }}</strong>
+        <input *ngIf="editTaskId === task.id" [(ngModel)]="editTitle" autofocus>
         <span class="priority {{ task.priority }}">{{ task.priority }}</span>
         <span class="due-date">{{ task.dueDate }}</span>
       </span>
-      <button (click)="toggleTask(task.id); $event.stopPropagation()">✔</button>
-      <button (click)="deleteTask(task.id); $event.stopPropagation()">🗑</button>
+      <button (click)="toggleTask(task.id); $event.stopPropagation()">Complete</button>
+      <button (click)="deleteTask(task.id); $event.stopPropagation()">Delete</button>
+      <button *ngIf="editTaskId !== task.id" (click)="startEditing(task); $event.stopPropagation()">Edit</button>
+      <button *ngIf="editTaskId === task.id" (click)="saveTask(task.id); $event.stopPropagation()">Save</button>
     </div>
-    <p *ngIf="task.showDescription" class="task-description">
-      {{ task.description || "Опис відсутній" }}
+    <p *ngIf="task.showDescription && editTaskId !== task.id" class="task-description">
+      {{ task.description || "No Info" }}
     </p>
+    <textarea *ngIf="editTaskId === task.id" [(ngModel)]="editDescription"></textarea>
   </li>
 </ul>
